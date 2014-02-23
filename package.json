@@ -1,0 +1,29 @@
+{
+  "name": "webstorm-templates",
+  "version": "0.0.1",
+  "description": "A collection of some of my custom live templates for Webstorm / IntelliJ IDE",
+  "main": "Gruntfile.js",
+  "scripts": {
+    "test": "grunt test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fidel-karsto/webstorm-templates.git"
+  },
+  "keywords": [
+    "live templates",
+    "foundation",
+    "webstorm"
+  ],
+  "author": "Karsten Rieger <fidel.karsto@gmail.com> (http://js-ninjutsu.com/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fidel-karsto/webstorm-templates/issues"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.2",
+    "grunt-xsltproc": "~0.3.0",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-copy": "~0.5.0"
+  }
+}
