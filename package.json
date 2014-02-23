@@ -24,6 +24,7 @@
     "grunt": "~0.4.2",
     "grunt-xsltproc": "~0.3.0",
     "grunt-contrib-clean": "~0.5.0",
-    "grunt-contrib-copy": "~0.5.0"
+    "grunt-contrib-copy": "~0.5.0",
+    "grunt-listfiles": "~0.1.4"
   }
 }
