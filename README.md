@@ -5,7 +5,11 @@ This is just a prove of concept on how to convert Sublime Text Snippets into Web
 
 ## How to install
 In order to build the referenced Sublime Text 2 Snippets you need to have [Grunt](https://gruntjs.com/) installed. 
-Once you are ready to go, just enter _grunt_ into the command line:
+Once you are ready to go, install dependencies with _npm_ and then enter _grunt_ into the command line:
+
+```shell
+npm install
+```
 
 ```shell
 grunt
