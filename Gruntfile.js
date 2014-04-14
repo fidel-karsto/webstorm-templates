@@ -16,11 +16,13 @@ module.exports = function(grunt) {
                     replacement: encodeURI(' ')
                 }]
             },
-            foundation5: {
+            collectTemplates: {
                 files: {
-                    'tmp/Zurb-Foundation-Templates.xml': ['externals/foundation-5-sublime-snippets/Snippets/Sublime Snippets/*.sublime-snippet']
+                    'tmp/Zurb-Foundation-Templates.xml': ['externals/foundation-5-sublime-snippets/Snippets/Sublime Snippets/*.sublime-snippet'],
+                    'tmp/Custom-Sublime-Snippets.xml': ['src-sublime-snippets/*.sublime-snippet']
                 }
             }
+
         },
 
         xsltproc: {
@@ -31,7 +33,7 @@ module.exports = function(grunt) {
                 files: [{
                     expand: true,
                     flatten: true,
-                    src: 'tmp/Zurb-Foundation-Templates.xml',
+                    src: 'tmp/<%= grunt.task.current.args[0] %>',
                     dest: 'build/',
                     rename: function (dest, matchedSrcPath) {
                         return (encodeURI(dest + matchedSrcPath.replace('.sublime-snippet', '.xml')));
@@ -48,6 +50,12 @@ module.exports = function(grunt) {
                     src: 'templates/*.xml',
                     dest: 'build/'
                 }]
+            }
+        },
+
+        postProcessSnippets: {
+            options: {
+                files: ['build/Custom-Sublime-Snippets.xml']
             }
         },
 
@@ -72,7 +80,11 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-listfiles');
 
-    grunt.registerTask('foundation5', ['clean:previousSnippets','listfiles', 'xsltproc', 'clean:tempOnly']);
+    grunt.loadTasks('tasks');
 
-    grunt.registerTask('default', ['foundation5', 'copy']);
+    grunt.registerTask('foundation5', ['xsltproc:compile:Zurb-Foundation-Templates.xml']);
+    grunt.registerTask('customSnippets', ['xsltproc:compile:Custom-Sublime-Snippets.xml']);
+
+    grunt.registerTask('default', ['clean', 'listfiles:collectTemplates','foundation5', 'customSnippets',
+                                   'postProcessSnippets', 'copy', 'clean:tempOnly']);
 };
