@@ -1,7 +1,4 @@
-var fs = require('fs'),
-    path = require('path'),
-    childProcess = require('child_process'),
-    xmldom = require('xmldom');
+var xmldom = require('xmldom');
 
 module.exports = function (grunt) {
     'use strict';
@@ -11,7 +8,6 @@ module.exports = function (grunt) {
         PLACEHOLDER_NO_DEFAULT_G   = /\$\{(\d+):\}/g,
         PLACEHOLDER_NO_DEFAULT     = /\$\{(\d+):\}/,
         PLACEHOLDER_END_G          = /\$0/g,
-        PLACEHOLDER_END            = /\$0/,
         FIELD_POINTS_G             = /\$(\d+)/g,
         FIELD_POINTS               = /\$(\d+)/;
 
@@ -23,7 +19,7 @@ module.exports = function (grunt) {
             domParser       = new xmldom.DOMParser(),
             xmlSerializer   = new xmldom.XMLSerializer();
 
-        console.log('running postProcess', files);
+        grunt.log.writeln('running postProcess', files);
 
         files.forEach(function(file) {
             var template = grunt.file.read(file),
@@ -34,7 +30,8 @@ module.exports = function (grunt) {
                 fieldPts,
                 tmplStr,
                 tmplEl;
-            console.log('processing ', template);
+
+            grunt.verbose.write('processing ', template);
 
             doc = domParser.parseFromString(template, 'text/xml');
             tmplEl = [].slice.call(doc.getElementsByTagName('template'));
@@ -43,14 +40,26 @@ module.exports = function (grunt) {
                 tmplEl.forEach(function(tmpl) {
                     tmplStr = tmpl.getAttribute('value');
 
+                    while(fieldPts = FIELD_POINTS_G.exec(tmplStr)){
+                        if (fieldPts[1] > 0) {
+                            customVars.push({
+                                index: fieldPts[1],
+                                defaultValue: null,
+                                name: 'FIELD' + fieldPts[1]
+                            });
+                        }
+                        grunt.verbose.writeln('field points', fieldPts);
+                        tmplStr = tmplStr.replace(FIELD_POINTS, '$FIELD$');
+                    }
+
                     while(defaults = PLACEHOLDER_WITH_DEFAULT_G.exec(tmplStr)){
                         customVars.push({
                             index: defaults[1],
                             defaultValue: defaults[2],
                             name: 'MYVAR' + defaults[1]
                         });
-                        //console.log('defaults', customVars);
-                        tmplStr = tmplStr.replace(PLACEHOLDER_WITH_DEFAULT, placeHolderStr + defaults[1] + placeHolderStr).replace(placeHolderRegEx, '$');
+                        grunt.verbose.writeln('defaults', customVars);
+                        tmplStr = tmplStr.replace(PLACEHOLDER_WITH_DEFAULT, placeHolderStr + '$MYVAR' + defaults[1] + placeHolderStr).replace(placeHolderRegEx, '$');
                     }
 
                     while(noDefaults = PLACEHOLDER_NO_DEFAULT_G.exec(tmplStr)){
@@ -59,22 +68,16 @@ module.exports = function (grunt) {
                             defaultValue: null,
                             name: 'MYVAR' + noDefaults[1]
                         });
-                        //console.log('no defaults', noDefaults);
-                        tmplStr = tmplStr.replace(PLACEHOLDER_NO_DEFAULT, '$CUSTOMVAR$');
-                    }
-
-                    while(fieldPts = FIELD_POINTS_G.exec(tmplStr)){
-                        customVars.push({
-                            index: fieldPts[1],
-                            defaultValue: null,
-                            name: 'MYVAR' + fieldPts[1]
-                        });
-                        //console.log('field points', fieldPts);
-                        //tmplStr = tmplStr.replace(FIELD_POINTS, '$_$');
+                        grunt.verbose.writeln('no defaults', noDefaults);
+                        tmplStr = tmplStr.replace(PLACEHOLDER_NO_DEFAULT, '$MYVAR' + noDefaults[1] + '$');
                     }
 
                     tmplStr = tmplStr.replace(PLACEHOLDER_END_G, '$END$');
                     tmpl.setAttribute('value', tmplStr);
+
+                    customVars.sort(function(a, b) {
+                        return a.index - b.index;
+                    });
 
                     customVars.forEach(function(customVar){
                         var variableEl = doc.createElement('variable');
@@ -86,8 +89,9 @@ module.exports = function (grunt) {
                     });
                 });
             }
+            grunt.file.write(file, xmlSerializer.serializeToString(doc));
 
-            console.log(xmlSerializer.serializeToString(doc));
+            grunt.verbose.write(xmlSerializer.serializeToString(doc));
         });
 
         done();
