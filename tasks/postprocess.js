@@ -66,7 +66,17 @@ module.exports = function (grunt) {
                     });
                 });
             }
-            grunt.file.write(file, xmlSerializer.serializeToString(doc));
+
+            doc = xmlSerializer.serializeToString(doc);
+
+            //Replace actual newline and tabs for their utf8 code in template value.
+            doc = doc.replace(/<template name="[^\"]*" value=\"[^\"]*\"/gm, function(match){
+              match = match.replace(/\n/g, "&#10;");
+              match = match.replace(/\t/g, "&#09;");
+              return match;
+            });
+
+            grunt.file.write(file, doc);
 
             grunt.verbose.write(xmlSerializer.serializeToString(doc));
         });
