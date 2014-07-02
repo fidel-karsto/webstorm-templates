@@ -38,14 +38,14 @@ module.exports = function (grunt) {
                     tmplStr = tmpl.getAttribute('value');
                   grunt.verbose.write('template prior modification', tmplStr);
                     tmplStr = tmplStr.replace(PLACEHOLDER_WITH_DEFAULT_G, function(match, p1, p2, p3) {
-                      if (!findIndex(customVars, p1 | p3)) {
+                      if (!findIndex(customVars, p1 || p3)) {
                         customVars.push({
-                          index: p1 | p3,
+                          index: p1 || p3,
                           expression: "\"" + p2 + "\"",
-                          name: 'MYVAR' + (p1 | p3)
+                          name: 'MYVAR' + (p1 || p3)
                         });
                       }
-                      return '$MYVAR' + (p1 | p3) +'$';
+                      return '$MYVAR' + (p1 || p3) +'$';
                     });
                   grunt.verbose.write('template after modification' ,tmplStr);
 
