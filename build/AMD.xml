@@ -25,5 +25,42 @@
       <option name="OTHER" value="false" />
     </context>
   </template>
+  <template name="gmod" value="/**&#10; * &#10; * &#10; * @namespace $NAMESPACE$&#10; * @exports  $MODULENAME$&#10; *&#10; * @requires jQuery &gt;= ...&#10; *&#10; * @author $USERNAME$&#10; * @date $DATE$&#10; */&#10;(function (doc, win, $$) {&#10;&#10;    var $NAMESPACE$ = win.$NAMESPACE$ || {},&#10;        $MODULENAME$,&#10;        initialise = function () {&#10;            $END$&#10;        };&#10;    &#10;    $MODULENAME$ = {&#10;        init: initialise&#10;    };&#10;    &#10;    if (typeof window.define === &quot;function&quot; &amp;&amp; window.define.amd) {&#10;&#10;        define(&quot;$MODULENAME$&quot;, [], function() {&#10;            return $MODULENAME$;&#10;        });&#10;&#10;    } else {&#10;&#10;        $NAMESPACE$.$MODULENAME$ = $MODULENAME$;&#10;&#10;        $$(document).ready(function () {&#10;            $MODULENAME$.init();&#10;        });&#10;    }&#10;}(document, window, jQuery));" description="generic module definition" toReformat="true" toShortenFQNames="true">
+    <variable name="DATE" expression="date()" defaultValue="" alwaysStopAt="true" />
+    <variable name="USERNAME" expression="user()" defaultValue="author@company.com" alwaysStopAt="true" />
+    <variable name="NAMESPACE" expression="capitalizeAndUnderscore(String)" defaultValue="&quot;wub&quot;" alwaysStopAt="true" />
+    <variable name="MODULENAME" expression="jsClassName()" defaultValue="&quot;MyModule&quot;" alwaysStopAt="true" />
+    <context>
+      <option name="HTML_TEXT" value="false" />
+      <option name="HTML" value="false" />
+      <option name="XSL_TEXT" value="false" />
+      <option name="XML" value="false" />
+      <option name="JAVA_CODE" value="false" />
+      <option name="JAVA_STATEMENT" value="false" />
+      <option name="JAVA_EXPRESSION" value="false" />
+      <option name="JAVA_DECLARATION" value="false" />
+      <option name="JAVA_COMMENT" value="false" />
+      <option name="JAVA_STRING" value="false" />
+      <option name="COMPLETION" value="false" />
+      <option name="CSS_PROPERTY_VALUE" value="false" />
+      <option name="CSS_DECLARATION_BLOCK" value="false" />
+      <option name="CSS_RULESET_LIST" value="false" />
+      <option name="CSS" value="false" />
+      <option name="JAVA_SCRIPT" value="true" />
+      <option name="TypeScript" value="false" />
+      <option name="JSP" value="false" />
+      <option name="SQL" value="false" />
+      <option name="CUCUMBER_FEATURE_FILE" value="false" />
+      <option name="CoffeeScript" value="false" />
+      <option name="GROOVY" value="false" />
+      <option name="GROOVY_EXPRESSION" value="false" />
+      <option name="GROOVY_STATEMENT" value="false" />
+      <option name="GROOVY_DECLARATION" value="false" />
+      <option name="MAVEN" value="false" />
+      <option name="ASPECTJ" value="false" />
+      <option name="GSP" value="false" />
+      <option name="HAML" value="false" />
+      <option name="OTHER" value="false" />
+    </context>
+  </template>
 </templateSet>
-
