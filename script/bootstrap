@@ -1,0 +1,13 @@
+#!/bin/sh
+
+#
+# usage from project root:
+# $> ./script/bootstrap
+#
+
+npm install
+
+git submodule update --init --recursive
+
+grunt
+
